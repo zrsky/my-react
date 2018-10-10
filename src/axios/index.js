@@ -28,7 +28,7 @@ export default class Axios{
                 timeout: 5000
             }).then((response) => {
                 if(response.status === 200) {
-                    if(response.data.code === 0) {
+                    if(response.data.code === '0') {
                         let res = response.data;
                         resolve(res);
                     }else{
