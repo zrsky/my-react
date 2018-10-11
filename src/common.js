@@ -5,9 +5,11 @@ import { Row } from 'antd'
 export default class Common extends React.Component {
     render() {
         return (
-            <div>
+            <div className="common-page">
                 <Row>
-                    <Header />
+                    <div className="simple-page">
+                        <Header menuType="second" />
+                    </div>
                 </Row>
                 <Row>
                     { this.props.children }

@@ -1,6 +1,7 @@
 import React from 'react'
 import { Card, Table, Tag, message } from 'antd'
 import axios from '../../axios'
+import { Pagination } from '../../utils/utils'
 
 export default class BasicTable extends React.Component{
 
@@ -59,29 +60,28 @@ export default class BasicTable extends React.Component{
                 }
             }
         }).then((data) => {
-            const pagination = {...this.state.pagination};
-            pagination.pageSize = data.result['page_size'];
-            pagination.total = data.result['total_count'];
-            pagination.showQuickJumper = true;
+            const pager1 = {...this.state.pagination};
+            const pager2 = Pagination(data);
+            const pagination = Object.assign(pager1, pager2);
             const list = data.result.list;
             list.map((item,index)=>{
                 item.key = index;
             })
             this.setState({
                 dataSource2: list,
+                pagination: pagination
             })
         })
     }
 
     handleTableChange = (pagination, filters, sorter) => {
-        console.log(filters)
-        console.log(sorter)
         const pager = {...this.state.pagination};
         pager.current = pagination.current;
         this.setState({
             pagination: pager
         });
-
+        this.params.page = pager.current;
+        this.request();
     }
 
     onSelectChange = (selectedRowKeys)=>{

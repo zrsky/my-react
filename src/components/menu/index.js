@@ -36,10 +36,10 @@ export default class NavLeft extends React.Component {
     }
     render() {
         return(
-            <div>
+            <div className="navLeft">
                 <div className="logo">
                     <img src="assets/logo-ant.svg" alt=""/>
-                    <h1>Imooc Ms</h1>
+                    <h1>Sky Ms</h1>
                 </div>
                 <Menu theme="dark" mode="vertical">
                     { this.state.menuTreeNode }
