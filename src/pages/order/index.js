@@ -1,7 +1,6 @@
 import React from 'react'
 import { Card, Form, Input, Button, Select, Radio, DatePicker, Table, Modal } from 'antd'
 import axios from '../../axios'
-import { Pagination } from '../../utils/utils'
 import BaseForm from '../../BaseForm'
 
 const FormItem = Form.Item;
@@ -65,31 +64,20 @@ export default class Order extends React.Component{
     ]
 
     componentWillMount() {
-        this.request();
+        const params = {
+            page: this.params.page
+        };
+        this.request(params);
     }
 
-    request = ()=>{
-        axios.ajax({
-            type: 'get',
-            url: '/order/list',
-            data: {
-                params: {
-                    page: this.params.page
-                }
-            }
-        }).then((data) => {
-            const pager1 = {...this.state.pagination};
-            const pager2 = Pagination(data);
-            const pagination = Object.assign(pager1, pager2);
-            const list = data.result['item_list'];
-            list.map((item,index)=>{
-                item.key = index;
-            })
-            this.setState({
-                dataSource: list,
-                pagination: pagination
-            })
-        })
+    handleSubmit = (params)=>{
+        params = Object.assign(params, this.params);
+        this.request(params);
+    }
+
+    request = (params)=>{
+        axios.request(this, '/order/list', params);
+        
     }
 
     handleTableChange = (pagination, filters, sorter) => {
@@ -180,7 +168,7 @@ export default class Order extends React.Component{
             <div className="city">
                <Card>
                     <Form layout="inline" style={{textAlign:'left'}}>
-                        <BaseForm formList={this.formList} />
+                        <BaseForm formList={this.formList} handleSubmit={this.handleSubmit} />
                     </Form>
                </Card>
                <Card style={{marginTop:10}}>

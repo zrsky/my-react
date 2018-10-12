@@ -26,3 +26,18 @@ export const getOptionList = function(options) {
         return (<Option value={item.value} key={item.value}>{item.name}</Option>)
     })
 }
+
+export const updateSelectedItem = function(selectedRowKeys, selectedItem, selectedId){
+    if(selectedId){
+        this.setState({
+            selectedRowKeys,
+            selectedItem,
+            selectedId
+        });
+    }else{
+        this.setState({
+            selectedRowKeys,
+            selectedItem,
+        });
+    }
+}

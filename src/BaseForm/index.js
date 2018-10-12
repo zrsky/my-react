@@ -7,7 +7,22 @@ import { getOptionList } from '../utils/utils'
 // const Option = Select.Option;
 
 class BaseForm extends React.Component{
+    
+    handleFormSubmit = (e)=>{
+        const handleSubmit = this.props.handleSubmit;
+        e.preventDefault();
+        this.props.form.validateFields((err, values) => {
+        if (!err) {
+            handleSubmit(values);
+            console.log('Received values of form: ', values);
+        }
+        });
+    }
 
+    handleReset = ()=>{
+        this.props.form.resetFields();
+    }
+    
 
     initFormList = ()=>{
         const formList = this.props.formList || [];
@@ -67,8 +82,24 @@ class BaseForm extends React.Component{
                 )}
                 </FormItem>
                 getFormList.push(input);
+            }else if(list.type === 'date'){
+                const date = <FormItem label={list.label}>
+                {getFieldDecorator('date')(
+                    <DatePicker
+                    showTime
+                    format="YYYY-MM-DD HH:mm:ss"
+                    placeholder="请输入日期"
+                    />
+                )}
+            </FormItem>
+            getFormList.push(date);
             }
         })
+        const button = <FormItem>
+            <Button type="primary" onClick={this.handleFormSubmit} style={{marginRight:20,marginLeft:20}}>查询</Button>
+            <Button onClick={this.handleReset}>重置</Button>
+        </FormItem>;
+        getFormList.push(button);
         return getFormList;
     }
 
