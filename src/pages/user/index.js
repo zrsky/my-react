@@ -67,6 +67,7 @@ export default class User extends React.Component{
                     title: '提示',
                     content: '请选择一个员工'
                   });
+                return;
             }
             this.setState({
                 title: '编辑员工',
@@ -74,23 +75,40 @@ export default class User extends React.Component{
                 type
             });
         }else if(type == "detail") {
-            let userInfo = this.state.selectedItem;
-            this.setState({
-                userInfo 
-            })
-        }else if(type == 'delete') {
             let item = this.state.selectedItem;
+            console.log(item)
             if(!item) {
                 Modal.info({
                     title: '提示',
                     content: '请选择一个员工'
                   });
+                return;
+            }
+            this.setState({
+                title: '员工详情',
+                isVisible: true,
+                type
+            });
+            let userInfo = item[0];
+            this.setState({
+                userInfo 
+            })
+        }else if(type == 'delete') {
+            let _this = this;
+            let item = this.state.selectedItem;
+            if(!item) {
+                Modal.info({
+                    title: '提示',
+                    content: '请选择一个员工'
+                });
+                return;
             }
             confirm({
                 title: '提示',
                 content: '确认要删除吗？',
                 onOk() {
                     axios.ajax({
+                        type: "get",
                         url: '/user/delete',
                         data: {
                             params: {
@@ -99,10 +117,10 @@ export default class User extends React.Component{
                         }
                     }).then((res) => {
                         if (res.code == 0) {
-                            this.setState({
+                            _this.setState({
                                 isVisible: false
                             })
-                            this.request();
+                            _this.request();
                         }
                     })
                 }
@@ -131,9 +149,14 @@ export default class User extends React.Component{
     }
 
     handleCancel = ()=>{
+        console.log('cancel')
         this.setState({
             isVisible: false
         })
+        this.setState({
+            userInfo: null
+        })
+        this.ModalForm.props.form.resetFields();
     }
 
     render() {
@@ -250,7 +273,7 @@ export default class User extends React.Component{
                     onCancel={this.handleCancel}
                     { ...footer }
                 >
-                    <ModalForm type={this.state.type} userInfo={this.state.selectItem} wrappedComponentRef={(form) => this.ModalForm = form} />
+                    <ModalForm type={this.state.type} userInfo={this.state.userInfo} wrappedComponentRef={(form) => this.ModalForm = form} />
                 </Modal>
             </div>
         )
@@ -271,6 +294,7 @@ class ModalForm extends React.Component{
     render() {
        const type = this.props.type;
        const userInfo = this.props.userInfo || {};
+       console.log(userInfo)
         const {
             getFieldDecorator
         } = this.props.form;
