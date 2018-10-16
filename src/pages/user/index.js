@@ -11,7 +11,7 @@ const RadioGroup = Radio.Group;
 const Option = Select.Option;
 const confirm = Modal.confirm;
 
-export default class User extends React.Component{
+export default class User extends React.Component {
 
     state = {
         dataSource: [],
@@ -20,7 +20,8 @@ export default class User extends React.Component{
         pagination: {},
         isVisible: false,
         title: '',
-        type: ''
+        type: '',
+        userInfo: null
     }
 
     params = {
@@ -54,6 +55,7 @@ export default class User extends React.Component{
     }
 
     handleOperate = (type)=>{
+        let item = this.state.selectedItem;
         if(type == 'create'){
             this.setState({
                 title: '创建员工',
@@ -61,7 +63,6 @@ export default class User extends React.Component{
                 type
             });
         }else if(type == 'edit'){
-            let item = this.state.selectedItem;
             if(!item) {
                 Modal.info({
                     title: '提示',
@@ -89,10 +90,6 @@ export default class User extends React.Component{
                 isVisible: true,
                 type
             });
-            let userInfo = item[0];
-            this.setState({
-                userInfo 
-            })
         }else if(type == 'delete') {
             let _this = this;
             let item = this.state.selectedItem;
@@ -126,26 +123,43 @@ export default class User extends React.Component{
                 }
               });
         }
+        console.log( item && type !== 'create')
+        if( item && type != 'create' ){
+            console.log('create')
+            let userInfo = item;
+            this.setState({
+                userInfo 
+            })
+        }
     }
 
-    handleSubmit = ()=>{
-        let type = this.state.type;
-        let data = this.ModalForm.props.form.getFieldsValue();
-        axios.ajax({
-            url: type == 'create' ? '/user/add' : '/user/edit',
-            data: {
-                params: {
-                    ...data
-                }
-            }
-        }).then((res) => {
-            if (res.code == 0) {
-                this.setState({
-                    isVisible: false
+    handleOK = ()=>{
+        this.ModalForm.props.form.validateFields((err, values) => {
+            if (!err) {
+                let type = this.state.type;
+                let data = this.ModalForm.props.form.getFieldsValue();
+                axios.ajax({
+                    type: 'get',
+                    url: type == 'create' ? '/user/add' : '/user/edit',
+                    data: {
+                        params: {
+                            ...data
+                        }
+                    }
+                }).then((res) => {
+                    if (res.code == 0) {
+                        this.setState({
+                            isVisible: false
+                        })
+                        Modal.info({
+                            title: '提示',
+                            content: '操作成功'
+                          });
+                        this.request();
+                    }
                 })
-                this.request();
             }
-        })
+          });
     }
 
     handleCancel = ()=>{
@@ -269,7 +283,7 @@ export default class User extends React.Component{
                 <Modal
                     visible={this.state.isVisible}
                     title={this.state.title}
-                    onOK={this.handleSubmit}
+                    onOk={this.handleOK}
                     onCancel={this.handleCancel}
                     { ...footer }
                 >

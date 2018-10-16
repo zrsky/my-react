@@ -22,7 +22,7 @@ export default class Axios{
         let baseApi = 'https://www.easy-mock.com/mock/5a7278e28d0c633b9c4adbd7/api';
         return new Promise((resolve, reject)=>{
             axios({
-                method: options.type,
+                method: options.type || 'get',
                 url: options.url,
                 baseURL: baseApi,
                 params: (options.data && options.data.params) || '',

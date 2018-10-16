@@ -37,7 +37,9 @@ class BaseForm extends React.Component{
             let width = list.width;
             if(list.type === 'select') {
                 const select = <FormItem label={label}>
-                {getFieldDecorator(field)(
+                {getFieldDecorator(field, {
+                    initialValue: initialValue
+                })(
                     <Select style={{width:width}} placeholder={placeholder}>
                         { getOptionList(list.list) }
                     </Select>
