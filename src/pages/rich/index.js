@@ -65,7 +65,7 @@ export default class Rich extends React.Component{
                     >
                     {draftToHtml(this.state.contentState)}
                 </Modal>
-            </div>
+            </div>   
         )
     }
 }

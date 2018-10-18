@@ -3,7 +3,6 @@ import {Row,Col} from 'antd'
 import Header from './components/header'
 import Footer from './components/footer'
 import NavLeft from './components/menu'
-import Home from './pages/home'
 import './style/common.less'
 
 export default class Admin extends React.Component {

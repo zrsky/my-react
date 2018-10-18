@@ -3,8 +3,9 @@ import { Col, Row} from 'antd'
 import './index.less'
 import { FormateDate } from '../../utils/utils'
 import axios from '../../axios'
+import { connect } from 'react-redux'
 
-export default class Header extends React.Component {
+class Header extends React.Component {
     state = {};
     componentWillMount() {
         this.setState({
@@ -46,12 +47,12 @@ export default class Header extends React.Component {
                         </Col> : ''}
                     <Col span={menuType?18:24}>
                         <span>欢迎，{this.state.userName}</span>
-                        <a href="#">退出</a>
+                        <a href="javascript:void(0);">退出</a>
                     </Col>
                 </Row>
                 {!menuType ? <Row className="breadcrumb">
                 <Col span="4" className="breadcrumb-title">
-                    首页
+                   { this.props.menuName }
                 </Col>
                 <Col span="20" className="weather">
                     <span className="weather-date">{ this.state.sys }</span>
@@ -63,3 +64,11 @@ export default class Header extends React.Component {
         )
     }
 }
+
+const mapStateProps = state => {
+    return {
+        menuName: state.menuName
+    }
+}
+
+export default connect(mapStateProps)(Header)

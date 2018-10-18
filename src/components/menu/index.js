@@ -1,14 +1,17 @@
 import React from 'react'
 import menuConfig from '../../resource/menuConfig'
-import { Menu, Icon } from 'antd'
+import { Menu } from 'antd'
 import './index.less'
 import { NavLink } from 'react-router-dom'
+import { connect } from 'react-redux'
+
+import { switchMenu } from '../../redux/action'
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 
-export default class NavLeft extends React.Component {
+class NavLeft extends React.Component {
     componentWillMount(){
         const menuTreeNode = this.renderMenu(menuConfig);
         console.log(menuTreeNode)
@@ -16,6 +19,13 @@ export default class NavLeft extends React.Component {
         this.setState({
             menuTreeNode
         })
+    }
+
+    handleClick = ({item})=>{
+        let { dispatch } = this.props;
+         // 事件派发，自动调用reducer，通过reducer保存到store对象中
+        dispatch(switchMenu(item.props.title));
+
     }
     
     renderMenu = (data) => {
@@ -27,7 +37,7 @@ export default class NavLeft extends React.Component {
                     </SubMenu>
                 )
             }
-            return <Menu.Item key={item.key}>
+            return <Menu.Item key={item.key} title={item.title}>
                 <NavLink to={item.key}>
                     {item.title}
                 </NavLink>
@@ -41,7 +51,7 @@ export default class NavLeft extends React.Component {
                     <img src="assets/logo-ant.svg" alt=""/>
                     <h1>Sky Ms</h1>
                 </div>
-                <Menu theme="dark" mode="vertical">
+                <Menu theme="dark" mode="vertical" onClick={ this.handleClick }>
                     { this.state.menuTreeNode }
                 </Menu>
 
@@ -49,3 +59,5 @@ export default class NavLeft extends React.Component {
         )
     }
 }
+
+export default connect()(NavLeft)
